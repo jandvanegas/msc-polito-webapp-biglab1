@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Table from 'react-bootstrap/Table'
+import Button from 'react-bootstrap/Button'
 
 function AppNavbar() {
   return (
@@ -69,7 +70,7 @@ function Films(props) {
 }
 
 function FilmsTable(props) {
-  return <Table striped>
+  return <Table>
     <thead>
       <tr>
         <th>Name</th>
@@ -87,11 +88,16 @@ function FilmsTable(props) {
 }
 
 function FilmRow(props) {
+  const favorite = <input class="form-check-input" type="checkbox" value="" checked={props.film.favorite}></input>
   return <>
     <tr>
-      <td>{props.film.name} </td>
-      <td>{props.film.favorite} </td>
-      <td>{props.film.watchedDate} </td>
+      <td className='d-flex flex-row justify-content-start'>
+        <Button variant='light'><i className='bi bi-pencil'></i></Button>
+        <Button variant='light'><i className='bi bi-trash'></i></Button>
+        {props.film.name}
+      </td>
+      <td>{favorite} Favorite</td>
+      <td>{props.film.watchDate?.format('YYYY-MM-DD')} </td>
       <td>{props.film.score} </td>
     </tr>
   </>
