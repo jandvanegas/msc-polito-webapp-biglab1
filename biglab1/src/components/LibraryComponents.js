@@ -1,13 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import Navbar from 'react-bootstrap/Navbar'
-import FormControl from 'react-bootstrap/FormControl'
-import Form from 'react-bootstrap/Form'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Table from 'react-bootstrap/Table'
-import Button from 'react-bootstrap/Button'
+import {ListGroup, Navbar, FormControl, Form, Container, Row, Col, Table, Button} from 'react-bootstrap'
+import dayjs from 'dayjs'
 
 function AppNavbar() {
   return (
@@ -45,25 +39,35 @@ function FilmBrand() {
   </Navbar.Brand>
 }
 
-function SideBar() {
-  return <Container>
-    <Row className='p-2 bg-primary text-white border-bottom'>All</Row>
-    <Row className='p-2 border-bottom'>Favorites</Row>
-    <Row className='p-2 border-bottom'>Best Rated</Row>
-    <Row className='p-2 border-bottom'>Seen Last Month</Row>
-    <Row className='p-2 border-bottom'>Unseen</Row>
-  </Container>
+function SideBar(props) {
+    return <ListGroup defaultActiveKey='#All'>
+            <ListGroup.Item action href='#All' onClick={() => props.setFilterSelected("All")} >
+                All
+            </ListGroup.Item>
+            <ListGroup.Item action href='#Favorites' onClick={() => props.setFilterSelected("Favorites")} >
+                Favorites
+            </ListGroup.Item>
+            <ListGroup.Item action href='#Best Rated' onClick={() => props.setFilterSelected("Best Rated")} >
+                Best Rated
+            </ListGroup.Item>
+            <ListGroup.Item action href='#Seen Last Month' onClick={() => props.setFilterSelected("Seen Last Month")} >
+                Seen Last Month
+            </ListGroup.Item>
+            <ListGroup.Item action href='#Unseen' onClick={() => props.setFilterSelected("Unseen")} >
+                Unseen
+            </ListGroup.Item>
+      </ListGroup>
 }
 
 function Films(props) {
   return <Container>
     <Row className='d-flex flex-row justify-content-start'>
-      <Col xs={2}>
+      <Col xs={4}>
         <h1 className='text-dark'>{props.title}</h1>
       </Col>
     </Row>
     <Row>
-      <FilmsTable films={props.films} />
+      <FilmsTable films={props.films} filterSelected={props.filterSelected}/>
     </Row>
   </Container>
 
@@ -81,7 +85,21 @@ function FilmsTable(props) {
     </thead>
     <tbody>
       {
-        props.films.map((film) => <FilmRow film={film} key={film.id} />)
+        props.films.filter((film) => {
+            if (props.filterSelected === "Favorites") {
+                return film.favorite;
+            }
+            else if (props.filterSelected === "Best Rated") {
+                return film.score === 5;
+            }
+            else if (props.filterSelected === "Seen Last Month") {
+                return ("watchDate" in film) && (dayjs().subtract(30, 'days')).isBefore(film.watchDate);
+            }
+            else if (props.filterSelected === "Unseen") {
+                return !("watchDate" in film);
+            }
+            return true;
+        }).map((film) => <FilmRow film={film} key={film.id}/>)
       }
     </tbody>
   </Table>
