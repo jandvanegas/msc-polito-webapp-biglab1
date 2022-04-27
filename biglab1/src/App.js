@@ -3,7 +3,9 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import dayjs from 'dayjs'
-import { AppNavbar, SideBar, Films } from './components/LibraryComponents'
+import { AppNavbar } from './components/AppNavbar'
+import { SideBar } from './components/AppSideBar'
+import { Films } from './components/Content'
 import { useState } from 'react';
 
 const fakeFilms = [
@@ -13,8 +15,6 @@ const fakeFilms = [
   { id: 4, name: 'Matrix', favorite: false, },
   { id: 5, name: 'Shrek', favorite: false, watchDate: dayjs('2022-03-30'), score: 3 },
 ];
-
-const filterTitle = 'Filter:All'
 
 function App() {
 
