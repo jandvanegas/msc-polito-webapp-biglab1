@@ -1,40 +1,56 @@
-import './App.css';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import dayjs from 'dayjs'
-import { AppNavbar } from './components/AppNavbar'
-import { SideBar } from './components/AppSideBar'
-import { Films } from './components/Content'
-import { useState } from 'react';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import Navigation from "./Components/Navigation";
+import Body from "./Components/Body";
+import dayjs from "dayjs";
+import { useState } from "react";
 
-const fakeFilms = [
-  { id: 1, name: 'Pulp Fiction', favorite: true, watchDate: dayjs('2022-03-10'), score: 5 },
-  { id: 2, name: '21 Grams', favorite: true, watchDate: dayjs('2022-03-17'), score: 4 },
-  { id: 3, name: 'Star Wars', favorite: false },
-  { id: 4, name: 'Matrix', favorite: false, },
-  { id: 5, name: 'Shrek', favorite: false, watchDate: dayjs('2022-03-30'), score: 3 },
+const films = [
+	{
+		id: 1,
+		title: "Pulp Fiction",
+		favorite: true,
+		watchDate: dayjs("2022-03-10"),
+		rating: 5,
+	},
+	{
+		id: 2,
+		title: "21 Grams",
+		favorite: true,
+		watchDate: dayjs("2022-03-10"),
+		rating: 4,
+	},
+	{
+		id: 3,
+		title: "Star Wars",
+		favorite: false,
+		watchDate: null,
+		rating: 0,
+	},
+	{
+		id: 4,
+		title: "Matrix",
+		favorite: false,
+		watchDate: null,
+		rating: 0,
+	},
+	{
+		id: 5,
+		title: "Shrek",
+		favorite: false,
+		watchDate: dayjs("2022-04-21"),
+		rating: 3,
+	},
 ];
 
 function App() {
-
-    const [filterSelected, setFilterSelected] = useState("All");
-
-  return (
-    <Container className="App">
-      <Row>
-        <AppNavbar />
-      </Row>
-      <Row>
-        <Col xs={4}>
-          <SideBar filterSelected={filterSelected} setFilterSelected={setFilterSelected}/>
-        </Col>
-        <Col xs={8}>
-          <Films films={fakeFilms} title={filterSelected} filterSelected={filterSelected}/>
-        </Col>
-      </Row>
-    </Container>
-  );
+	const [open, setOpen] = useState(false);
+	return (
+		<div className="App">
+			<Navigation open={open} setOpen={setOpen} />
+			<Body films={films} open={open} />
+		</div>
+	);
 }
 
 export default App;
