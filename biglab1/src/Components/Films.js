@@ -54,9 +54,7 @@ function FilmRow(props) {
       <FilmData
         film={props.film}
         editable={editable}
-        rating={newRating}
         setNewRating={setNewRating}
-        favorite={newFavorite}
         setNewFavorite={setNewFavorite}
       />
       <FilmAction
@@ -84,7 +82,7 @@ function FilmData(props) {
   return (
     <>
       <td>
-        <div style={props.newFavorite ? { color: "red" } : {}}>
+        <div style={props.film.favorite ? { color: "red" } : {}}>
           {props.film.title}
         </div>
       </td>
@@ -92,7 +90,7 @@ function FilmData(props) {
       <td>
         <CheckBox
           editable={props.editable}
-          value={props.newFavorite}
+          value={props.film.favorite}
           setValue={props.setNewFavorite}
         />
       </td>
@@ -106,11 +104,11 @@ function FilmData(props) {
       <td>
         {props.editable === true ? (
           <EditableRatingStars
-            rating={props.rating}
+            rating={props.film.rating}
             setRatingForm={props.setNewRating}
           />
         ) : (
-          <RatingStars rating={props.rating} />
+          <RatingStars rating={props.film.rating} />
         )}
       </td>
     </>
