@@ -46,12 +46,18 @@ const filmsLibrary = [
 function App() {
 	const [open, setOpen] = useState(false);
 	const [films, setFilms] = useState(filmsLibrary);
+	const [filmAutoIncrement, setFilmAutoIncrement] = useState(6);
+
 	const deleteFilm = (filmID) => {
 		setFilms((oldFilms) => oldFilms.filter((film) => film.id !== filmID));
 	};
+
 	const addFilm = (film) => {
+		film.id = filmAutoIncrement;
 		setFilms((oldFilms) => [...oldFilms, film]);
+		setFilmAutoIncrement(filmAutoIncrement + 1)
 	};
+
 	return (
 		<div className="App">
 			<Navigation open={open} setOpen={setOpen} />
@@ -60,6 +66,7 @@ function App() {
 				open={open}
 				addFilm={addFilm}
 				deleteFilm={deleteFilm}
+				filmAutoIncrement={filmAutoIncrement}
 			/>
 		</div>
 	);
