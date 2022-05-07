@@ -1,30 +1,19 @@
 import { Form } from "react-bootstrap";
 
-function CheckBoxActive() {
+function CheckBox(props) {
   return (
-    <Form>
-      <Form.Check
-        type="checkbox"
-        id="default-checkbox"
-        label="Favorite"
-        defaultChecked
-				disabled="true"
-      />
-    </Form>
+    <Form.Check
+      type="checkbox"
+      id="default-checkbox"
+      label="Favorite"
+      value={props.value}
+      defaultChecked={props.value}
+      disabled={!props.editable}
+      onChange={(event) => {
+        props.setValue(event.target.checked);
+      }}
+    />
   );
 }
 
-function CheckBoxNotActive() {
-  return (
-    <Form>
-      <Form.Check
-        type="checkbox"
-        id="default-checkbox"
-        label="Favorite"
-				disabled="true"
-      />
-    </Form>
-  );
-}
-
-export { CheckBoxActive, CheckBoxNotActive };
+export { CheckBox };

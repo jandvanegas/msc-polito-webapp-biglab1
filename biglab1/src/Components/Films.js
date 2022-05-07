@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { Table, Button } from "react-bootstrap";
-import { CheckBoxActive, CheckBoxNotActive } from "./CheckBox";
-import { RatingStars } from "./RatingStars";
+import { CheckBox } from "./CheckBox";
+import { EditableRatingStars, RatingStars } from "./RatingStars";
 import dayjs from "dayjs";
-import { Trash } from "react-bootstrap-icons";
+import {
+  Trash,
+  PencilSquare,
+  CheckSquare,
+  XSquare,
+} from "react-bootstrap-icons";
 
 function Films(props) {
   return (
@@ -27,7 +33,12 @@ function Films(props) {
             }
           })
           .map((film) => (
-            <FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} />
+            <FilmRow
+              film={film}
+              key={film.id}
+              deleteFilm={props.deleteFilm}
+              updateFilm={props.updateFilm}
+            />
           ))}
       </tbody>
     </Table>
@@ -35,10 +46,36 @@ function Films(props) {
 }
 
 function FilmRow(props) {
+  const [editable, setEditable] = useState(false);
+  const [newRating, setNewRating] = useState(props.film.rating);
+  const [newFavorite, setNewFavorite] = useState(props.film.favorite);
   return (
     <tr>
-      <FilmData film={props.film} />
-      <FilmAction film={props.film} deleteFilm={props.deleteFilm} />
+      <FilmData
+        film={props.film}
+        editable={editable}
+        rating={newRating}
+        setNewRating={setNewRating}
+        favorite={newFavorite}
+        setNewFavorite={setNewFavorite}
+      />
+      <FilmAction
+        film={props.film}
+        deleteFilm={() => {
+          props.deleteFilm(props.film.id);
+        }}
+        editable={editable}
+        setEditable={setEditable}
+        saveEdit={() => {
+          props.updateFilm(props.film.id, newRating, newFavorite);
+          setEditable(false);
+        }}
+        cancel={() => {
+          setNewFavorite(props.film.favorite);
+          setNewRating(props.film.rating);
+          setEditable(false);
+        }}
+      />
     </tr>
   );
 }
@@ -46,30 +83,35 @@ function FilmRow(props) {
 function FilmData(props) {
   return (
     <>
-      {props.film.favorite === true ? (
-        <td>
-          <div style={{ color: "red" }}>{props.film.title}</div>
-        </td>
-      ) : (
-        <td>
-          <div>{props.film.title}</div>
-        </td>
-      )}
+      <td>
+        <div style={props.newFavorite ? { color: "red" } : {}}>
+          {props.film.title}
+        </div>
+      </td>
 
       <td>
-        {props.film.favorite === true ? (
-          <CheckBoxActive />
-        ) : (
-          <CheckBoxNotActive />
-        )}
+        <CheckBox
+          editable={props.editable}
+          value={props.newFavorite}
+          setValue={props.setNewFavorite}
+        />
       </td>
+
       <td>
         {props.film.watchDate !== null
           ? props.film.watchDate.format("MMMM DD, YYYY")
           : ""}
       </td>
+
       <td>
-        <RatingStars rating={props.film.rating} />
+        {props.editable === true ? (
+          <EditableRatingStars
+            rating={props.rating}
+            setRatingForm={props.setNewRating}
+          />
+        ) : (
+          <RatingStars rating={props.rating} />
+        )}
       </td>
     </>
   );
@@ -78,14 +120,30 @@ function FilmData(props) {
 function FilmAction(props) {
   return (
     <td>
-      <Button
-        variant="danger"
-        onClick={() => {
-          props.deleteFilm(props.film.id);
-        }}
-      >
-        <Trash />
-      </Button>
+      {props.editable === false ? (
+        <>
+          <Button
+            variant="primary"
+            onClick={() => {
+              props.setEditable(true);
+            }}
+          >
+            <PencilSquare />
+          </Button>
+          <Button variant="danger" onClick={props.deleteFilm}>
+            <Trash />
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button variant="success" onClick={props.saveEdit}>
+            <CheckSquare />
+          </Button>
+          <Button variant="warning" onClick={props.cancel}>
+            <XSquare />
+          </Button>
+        </>
+      )}
     </td>
   );
 }

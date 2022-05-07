@@ -18,6 +18,7 @@ function Body(props) {
           <Films
             films={props.films}
             deleteFilm={props.deleteFilm}
+            updateFilm={props.updateFilm}
             filterSelected={filterSelected}
           />
           <AddFilm addFilm={props.addFilm} />

@@ -76,7 +76,7 @@ function FilmForm(props) {
         <Button variant="success" type="submit">
           <Check2Square />
         </Button>{" "}
-        <Button variant="danger" onClick={props.cancel}>
+        <Button variant="warning" onClick={props.cancel}>
           <XSquare />
         </Button>
       </Form.Group>
