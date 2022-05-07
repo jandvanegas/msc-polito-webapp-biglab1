@@ -15,12 +15,12 @@ function Body(props) {
 					<div className="d-flex justify-content-start m-3">
 						<h1>{filterSelected}</h1>
 					</div>
-					<Films films={props.films} filterSelected={filterSelected} />
-				</Col>
-			</Row>
-			<Row>
-				<Col className="d-flex col-12 justify-content-end">
-					<AddFilm />
+					<Films
+						films={props.films}
+						deleteFilm={props.deleteFilm}
+						filterSelected={filterSelected}
+					/>
+					<AddFilm addFilm={props.addFilm} />
 				</Col>
 			</Row>
 		</Container>

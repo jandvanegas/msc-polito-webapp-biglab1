@@ -1,7 +1,8 @@
-import { Table } from "react-bootstrap";
+import { Table, Button } from "react-bootstrap";
 import { CheckBoxActive, CheckBoxNotActive } from "./CheckBox";
 import RatingStars from "./RatingStars";
 import dayjs from "dayjs";
+import { Trash } from "react-bootstrap-icons";
 
 function Films(props) {
 	return (
@@ -26,7 +27,7 @@ function Films(props) {
 						}
 					})
 					.map((film) => (
-						<FilmRow film={film} key={film.id} />
+						<FilmRow film={film} key={film.id} deleteFilm={props.deleteFilm} />
 					))}
 			</tbody>
 		</Table>
@@ -36,7 +37,8 @@ function Films(props) {
 function FilmRow(props) {
 	return (
 		<tr>
-			<FilmData film={props.film}></FilmData>
+			<FilmData film={props.film} />
+			<FilmAction film={props.film} deleteFilm={props.deleteFilm} />
 		</tr>
 	);
 }
@@ -61,6 +63,21 @@ function FilmData(props) {
 				<RatingStars rating={props.film.rating} />
 			</td>
 		</>
+	);
+}
+
+function FilmAction(props) {
+	return (
+		<td>
+			<Button
+				variant="danger"
+				onClick={() => {
+					props.deleteFilm(props.film.id);
+				}}
+			>
+				<Trash />
+			</Button>
+		</td>
 	);
 }
 

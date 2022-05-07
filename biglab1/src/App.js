@@ -5,7 +5,7 @@ import Body from "./Components/Body";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-const films = [
+const filmsLibrary = [
 	{
 		id: 1,
 		title: "Pulp Fiction",
@@ -45,10 +45,22 @@ const films = [
 
 function App() {
 	const [open, setOpen] = useState(false);
+	const [films, setFilms] = useState(filmsLibrary);
+	const deleteFilm = (filmID) => {
+		setFilms((oldFilms) => oldFilms.filter((film) => film.id !== filmID));
+	};
+	const addFilm = (film) => {
+		setFilms((oldFilms) => [...oldFilms, film]);
+	};
 	return (
 		<div className="App">
 			<Navigation open={open} setOpen={setOpen} />
-			<Body films={films} open={open} />
+			<Body
+				films={films}
+				open={open}
+				addFilm={addFilm}
+				deleteFilm={deleteFilm}
+			/>
 		</div>
 	);
 }
