@@ -55,6 +55,7 @@ function FilmRow(props) {
         film={props.film}
         editable={editable}
         setNewRating={setNewRating}
+        newRating={newRating}
         setNewFavorite={setNewFavorite}
       />
       <FilmAction
@@ -104,7 +105,7 @@ function FilmData(props) {
       <td>
         {props.editable === true ? (
           <EditableRatingStars
-            rating={props.film.rating}
+            rating={props.newRating}
             setRatingForm={props.setNewRating}
           />
         ) : (
