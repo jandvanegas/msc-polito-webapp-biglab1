@@ -1,33 +1,17 @@
 import { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import dayjs from "dayjs";
-import { Check2Square, XSquare, Plus } from "react-bootstrap-icons";
+import { Check2Square, XSquare } from "react-bootstrap-icons";
 import { EditableRatingStars } from "./RatingStars";
 
-function AddFilm(props) {
-  const [showForm, setShowForm] = useState(false);
-  return showForm ? (
-    <FilmForm
-      addFilm={(film) => {
-        props.addFilm(film);
-        setShowForm(false);
-      }}
-      cancel={() => setShowForm(false)}
-    />
-  ) : (
-    <Container className="flex-container flex-row-reverse">
-      <Button className="btn-circle" onClick={() => setShowForm(true)}>
-        <Plus />
-      </Button>
-    </Container>
-  );
-}
-
 function FilmForm(props) {
-  const [title, setTitle] = useState("");
-  const [favorite, setFavorite] = useState(false);
-  const [watchDate, setWatchDate] = useState(dayjs());
-  const [rating, setRating] = useState(0);
+  const filmId = props.filmId;
+  const film = props.film;
+
+  const [title, setTitle] = useState(filmId ? film.title : "");
+  const [favorite, setFavorite] = useState(filmId ? film.favorite : false);
+  const [watchDate, setWatchDate] = useState(filmId && film.watchDate ? film.watchDate : dayjs());
+  const [rating, setRating] = useState(filmId ? film.rating : 0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -37,7 +21,11 @@ function FilmForm(props) {
       watchDate: dayjs(watchDate),
       rating: rating,
     };
-    props.addFilm(film);
+    if (filmId) {
+      props.editFilm(film);
+    } else {
+      props.addFilm(film);
+    }
   };
 
   return (
@@ -58,7 +46,10 @@ function FilmForm(props) {
         <Form.Check
           type="checkbox"
           value={favorite}
-          onChange={(event) => {setFavorite(event.target.checked)}}
+          checked={favorite}
+          onChange={(event) => {
+            setFavorite(event.target.checked);
+          }}
           label="Favorite"
         />
       </Form.Group>
@@ -84,4 +75,4 @@ function FilmForm(props) {
   );
 }
 
-export default AddFilm;
+export { FilmForm };

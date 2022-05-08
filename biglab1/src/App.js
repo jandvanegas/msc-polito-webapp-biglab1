@@ -1,9 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import Navigation from "./Components/Navigation";
-import Body from "./Components/Body";
+
+import { ListFilms, PageLayout, AddFilm, EditFilm } from "./Components/Views";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const filmsLibrary = [
   {
@@ -58,7 +59,7 @@ function App() {
     setFilmAutoIncrement(filmAutoIncrement + 1);
   };
 
-  const updateFilm = (filmId, newRating, newFavorite) => {
+  const editInline = (filmId, newRating, newFavorite) => {
     setFilms((oldFilms) => {
       return oldFilms.map((ex) => {
         if (ex.id === filmId) {
@@ -70,17 +71,48 @@ function App() {
     });
   };
 
+  const editFilm = (filmId, data) => {
+    setFilms((exFilms) => {
+      return exFilms.map((ex) => {
+        if (filmId === ex.id) {
+          return {
+            id: filmId,
+            title: data.title,
+            favorite: data.favorite,
+            watchDate: data.watchDate,
+            rating: data.rating,
+          };
+        } else {
+          return ex;
+        }
+      });
+    });
+  };
+
   return (
     <div className="App">
-      <Navigation open={open} setOpen={setOpen} />
-      <Body
-        films={films}
-        open={open}
-        addFilm={addFilm}
-        deleteFilm={deleteFilm}
-        updateFilm={updateFilm}
-        filmAutoIncrement={filmAutoIncrement}
-      />
+      <BrowserRouter>
+        <PageLayout open={open} setOpen={setOpen}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ListFilms
+                  films={films}
+                  open={open}
+                  deleteFilm={deleteFilm}
+                  editInline={editInline}
+                  filmAutoIncrement={filmAutoIncrement}
+                />
+              }
+            />
+            <Route path="add" element={<AddFilm addFilm={addFilm} />} />
+            <Route path="edit">
+              <Route path=":id" element={<EditFilm editFilm={editFilm} />} />
+            </Route>
+          </Routes>
+        </PageLayout>
+      </BrowserRouter>
     </div>
   );
 }

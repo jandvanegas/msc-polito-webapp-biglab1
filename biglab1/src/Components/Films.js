@@ -31,7 +31,8 @@ function Films(props) {
               film={film}
               key={film.id}
               deleteFilm={props.deleteFilm}
-              updateFilm={props.updateFilm}
+              editInline={props.editInline}
+              editFilm={props.editFilm}
             />
           ))}
       </tbody>
@@ -42,11 +43,14 @@ function Films(props) {
 function FilmRow(props) {
   return (
     <tr>
-      <FilmData film={props.film} updateFilm={props.updateFilm} />
+      <FilmData film={props.film} editInline={props.editInline} />
       <FilmAction
         film={props.film}
         deleteFilm={() => {
           props.deleteFilm(props.film.id);
+        }}
+        editFilm={() => {
+          props.editFilm(props.film)
         }}
       />
     </tr>
@@ -67,7 +71,7 @@ function FilmData(props) {
           editable={true}
           value={props.film.favorite}
           setValue={(newValue) => {
-            props.updateFilm(props.film.id, props.film.rating, newValue);
+            props.editInline(props.film.id, props.film.rating, newValue);
           }}
         />
       </td>
@@ -79,12 +83,12 @@ function FilmData(props) {
       </td>
 
       <td>
-          <EditableRatingStars
-            rating={props.film.rating}
-            setRatingForm={(newValue) => {
-              props.updateFilm(props.film.id, newValue, props.film.rating);
-            }}
-          />
+        <EditableRatingStars
+          rating={props.film.rating}
+          setRatingForm={(newValue) => {
+            props.editInline(props.film.id, newValue, props.film.favorite);
+          }}
+        />
       </td>
     </>
   );
@@ -94,12 +98,7 @@ function FilmAction(props) {
   return (
     <td>
       <>
-        <Button
-          variant="primary"
-          onClick={() => {
-            props.setEditable(true);
-          }}
-        >
+        <Button variant="primary" onClick={props.editFilm}>
           <PencilSquare />
         </Button>
         <Button variant="danger" onClick={props.deleteFilm}>
