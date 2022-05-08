@@ -1,49 +1,39 @@
 import { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import dayjs from "dayjs";
-import { Check2Square, XSquare, Plus } from "react-bootstrap-icons";
+import { Check2Square, XSquare } from "react-bootstrap-icons";
 import { EditableRatingStars } from "./RatingStars";
 
-function AddFilm(props) {
-  const [showForm, setShowForm] = useState(false);
-  return showForm ? (
-    <FilmForm
-      addFilm={(film) => {
-        props.addFilm(film);
-        setShowForm(false);
-      }}
-      cancel={() => setShowForm(false)}
-    />
-  ) : (
-    <Container className="flex-container flex-row-reverse">
-      <Button className="btn-circle" onClick={() => setShowForm(true)}>
-        <Plus />
-      </Button>
-    </Container>
-  );
-}
-
 function FilmForm(props) {
-  const [title, setTitle] = useState("");
-  const [favorite, setFavorite] = useState(false);
-  const [watchDate, setWatchDate] = useState(dayjs());
-  const [rating, setRating] = useState(0);
+  const filmId = props.filmId;
+  const film = props.film;
+
+  const [title, setTitle] = useState(filmId ? film.title : "");
+  const [favorite, setFavorite] = useState(filmId ? film.favorite : false);
+  const [watchDate, setWatchDate] = useState(
+    filmId && film.watchDate ? film.watchDate : ""
+  );
+  const [rating, setRating] = useState(filmId ? film.rating : 0);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const film = {
       title: title,
       favorite: favorite,
-      watchDate: dayjs(watchDate),
+      watchDate: watchDate,
       rating: rating,
     };
-    props.addFilm(film);
+    if (filmId) {
+      props.editFilm(film);
+    } else {
+      props.addFilm(film);
+    }
   };
 
   return (
     <Form
       onSubmit={handleSubmit}
-      className="flex-container align-items-stretch"
+      className="d-flex flex-column justify-content-center w-25 "
     >
       <Form.Group className="px-2 flex-fill">
         <Form.Control
@@ -58,21 +48,30 @@ function FilmForm(props) {
         <Form.Check
           type="checkbox"
           value={favorite}
-          onChange={(event) => {setFavorite(event.target.checked)}}
+          checked={favorite}
+          onChange={(event) => {
+            setFavorite(event.target.checked);
+          }}
           label="Favorite"
         />
       </Form.Group>
       <Form.Group className="px-2 flex-fill">
         <Form.Control
           type="date"
-          value={watchDate.format("YYYY-MM-DD")}
-          onChange={(event) => setWatchDate(dayjs(event.target.value))}
+          value={
+            watchDate !== "" && watchDate !== undefined
+              ? watchDate.format("YYYY-MM-DD")
+              : ""
+          }
+          onChange={(event) =>
+            setWatchDate(event.target.value ? dayjs(event.target.value) : "")
+          }
         />
       </Form.Group>
       <Form.Group className="px-2 flex-fill">
         <EditableRatingStars setRatingForm={setRating} rating={rating} />
       </Form.Group>
-      <Form.Group className="px-2 flex-fill d-flex flex-row">
+      <Form.Group className="px-2 d-flex flex-row justify-content-center">
         <Button variant="success" type="submit">
           <Check2Square />
         </Button>{" "}
@@ -84,4 +83,4 @@ function FilmForm(props) {
   );
 }
 
-export default AddFilm;
+export { FilmForm };
