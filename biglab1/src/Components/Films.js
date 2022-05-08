@@ -17,11 +17,11 @@ function Films(props) {
                 return film.rating === 5;
               case "seen-last-month":
                 return (
-                  film.watchDate !== null &&
+                  film.watchDate !== undefined &&
                   dayjs().subtract(30, "days").isBefore(film.watchDate)
                 );
               case "unseen":
-                return film.watchDate === null;
+                return film.watchDate === "" || film.watchDate === undefined;
               default:
                 return true;
             }
@@ -50,7 +50,7 @@ function FilmRow(props) {
           props.deleteFilm(props.film.id);
         }}
         editFilm={() => {
-          props.editFilm(props.film)
+          props.editFilm(props.film);
         }}
       />
     </tr>
@@ -77,7 +77,7 @@ function FilmData(props) {
       </td>
 
       <td>
-        {props.film.watchDate !== null
+        {props.film.watchDate !== undefined && props.film.watchDate !== ""
           ? props.film.watchDate.format("MMMM DD, YYYY")
           : ""}
       </td>

@@ -25,14 +25,14 @@ const filmsLibrary = [
     id: 3,
     title: "Star Wars",
     favorite: false,
-    watchDate: null,
+    watchDate: undefined,
     rating: 0,
   },
   {
     id: 4,
     title: "Matrix",
     favorite: false,
-    watchDate: null,
+    watchDate: undefined,
     rating: 0,
   },
   {
@@ -104,6 +104,7 @@ function App() {
               return (
                 <Route
                   path={`/${filter[0]}`}
+                  key={filter[0]}
                   element={
                     <ListFilms
                       films={films}

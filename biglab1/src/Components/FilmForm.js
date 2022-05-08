@@ -10,7 +10,9 @@ function FilmForm(props) {
 
   const [title, setTitle] = useState(filmId ? film.title : "");
   const [favorite, setFavorite] = useState(filmId ? film.favorite : false);
-  const [watchDate, setWatchDate] = useState(filmId && film.watchDate ? film.watchDate : dayjs());
+  const [watchDate, setWatchDate] = useState(
+    filmId && film.watchDate ? film.watchDate : ""
+  );
   const [rating, setRating] = useState(filmId ? film.rating : 0);
 
   const handleSubmit = (event) => {
@@ -18,7 +20,7 @@ function FilmForm(props) {
     const film = {
       title: title,
       favorite: favorite,
-      watchDate: dayjs(watchDate),
+      watchDate: watchDate,
       rating: rating,
     };
     if (filmId) {
@@ -31,7 +33,7 @@ function FilmForm(props) {
   return (
     <Form
       onSubmit={handleSubmit}
-      className="flex-container align-items-stretch"
+      className="d-flex flex-column justify-content-center w-25 "
     >
       <Form.Group className="px-2 flex-fill">
         <Form.Control
@@ -56,14 +58,20 @@ function FilmForm(props) {
       <Form.Group className="px-2 flex-fill">
         <Form.Control
           type="date"
-          value={watchDate.format("YYYY-MM-DD")}
-          onChange={(event) => setWatchDate(dayjs(event.target.value))}
+          value={
+            watchDate !== "" && watchDate !== undefined
+              ? watchDate.format("YYYY-MM-DD")
+              : ""
+          }
+          onChange={(event) =>
+            setWatchDate(event.target.value ? dayjs(event.target.value) : "")
+          }
         />
       </Form.Group>
       <Form.Group className="px-2 flex-fill">
         <EditableRatingStars setRatingForm={setRating} rating={rating} />
       </Form.Group>
-      <Form.Group className="px-2 flex-fill d-flex flex-row">
+      <Form.Group className="px-2 d-flex flex-row justify-content-center">
         <Button variant="success" type="submit">
           <Check2Square />
         </Button>{" "}

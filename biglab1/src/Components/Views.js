@@ -66,15 +66,21 @@ function PageLayout(props) {
 function AddFilm(props) {
   const navigate = useNavigate();
   return (
-    <FilmForm
-      addFilm={(film) => {
-        props.addFilm(film);
-        navigate("/");
-      }}
-      cancel={() => {
-        navigate("/");
-      }}
-    />
+    <Container className="d-flex flex-column ">
+      <div className="w-25">
+        <h2>Insert New Film</h2>
+      </div>
+      <FilmForm
+        className="w-25"
+        addFilm={(film) => {
+          props.addFilm(film);
+          navigate("/");
+        }}
+        cancel={() => {
+          navigate("/");
+        }}
+      />
+    </Container>
   );
 }
 
@@ -85,21 +91,26 @@ function EditFilm(props) {
   const location = useLocation();
   const film = {
     ...location.state.film,
-    watchDate: dayjs(location.state.watchDate),
+    watchDate: location.state.watchDate ? dayjs(location.state.watchDate) : "",
   };
 
   return (
-    <FilmForm
-      filmId={filmId}
-      film={film}
-      editFilm={(data) => {
-        props.editFilm(filmId, data);
-        navigate("/");
-      }}
-      cancel={() => {
-        navigate("/");
-      }}
-    />
+    <Container className="d-flex flex-column ">
+      <div className="w-25">
+        <h2>Edit Film</h2>
+      </div>
+      <FilmForm
+        filmId={filmId}
+        film={film}
+        editFilm={(data) => {
+          props.editFilm(filmId, data);
+          navigate("/");
+        }}
+        cancel={() => {
+          navigate("/");
+        }}
+      />
+    </Container>
   );
 }
 export { ListFilms, PageLayout, AddFilm, EditFilm };
