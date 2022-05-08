@@ -4,7 +4,7 @@ import "./App.css";
 import { ListFilms, PageLayout, AddFilm, EditFilm } from "./Components/Views";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 const filmsLibrary = [
   {
@@ -88,28 +88,41 @@ function App() {
       });
     });
   };
-
+  const filters = {
+    all: "All Films",
+    favorite: "Favorite Films",
+    "best-rated": "Best Rated Films",
+    "seen-last-month": "Seen-Last-Month Films",
+    unseen: "Unseen Films",
+  };
   return (
     <div className="App">
       <BrowserRouter>
         <PageLayout open={open} setOpen={setOpen}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <ListFilms
-                  films={films}
-                  open={open}
-                  deleteFilm={deleteFilm}
-                  editInline={editInline}
-                  filmAutoIncrement={filmAutoIncrement}
+            {Object.entries(filters).map((filter) => {
+              return (
+                <Route
+                  path={`/${filter[0]}`}
+                  element={
+                    <ListFilms
+                      films={films}
+                      open={open}
+                      deleteFilm={deleteFilm}
+                      editInline={editInline}
+                      filmAutoIncrement={filmAutoIncrement}
+                      filters={filters}
+                      filter={filter}
+                    />
+                  }
                 />
-              }
-            />
+              );
+            })}
             <Route path="add" element={<AddFilm addFilm={addFilm} />} />
             <Route path="edit">
               <Route path=":id" element={<EditFilm editFilm={editFilm} />} />
             </Route>
+            <Route path="*" element={<Navigate to="/all" />} />
           </Routes>
         </PageLayout>
       </BrowserRouter>

@@ -11,16 +11,16 @@ function Films(props) {
         {props.films
           .filter((film) => {
             switch (props.filterSelected) {
-              case "Favorite":
+              case "favorite":
                 return film.favorite;
-              case "Best Rated":
+              case "best-rated":
                 return film.rating === 5;
-              case "Seen Last Month":
+              case "seen-last-month":
                 return (
                   film.watchDate !== null &&
                   dayjs().subtract(30, "days").isBefore(film.watchDate)
                 );
-              case "Unseen":
+              case "unseen":
                 return film.watchDate === null;
               default:
                 return true;
