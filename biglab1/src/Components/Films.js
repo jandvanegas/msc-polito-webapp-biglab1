@@ -1,14 +1,8 @@
-import { useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import { CheckBox } from "./CheckBox";
-import { EditableRatingStars, RatingStars } from "./RatingStars";
+import { EditableRatingStars } from "./RatingStars";
 import dayjs from "dayjs";
-import {
-  Trash,
-  PencilSquare,
-  CheckSquare,
-  XSquare,
-} from "react-bootstrap-icons";
+import { Trash, PencilSquare } from "react-bootstrap-icons";
 
 function Films(props) {
   return (
@@ -46,33 +40,13 @@ function Films(props) {
 }
 
 function FilmRow(props) {
-  const [editable, setEditable] = useState(false);
-  const [newRating, setNewRating] = useState(props.film.rating);
-  const [newFavorite, setNewFavorite] = useState(props.film.favorite);
   return (
     <tr>
-      <FilmData
-        film={props.film}
-        editable={editable}
-        setNewRating={setNewRating}
-        newRating={newRating}
-        setNewFavorite={setNewFavorite}
-      />
+      <FilmData film={props.film} updateFilm={props.updateFilm} />
       <FilmAction
         film={props.film}
         deleteFilm={() => {
           props.deleteFilm(props.film.id);
-        }}
-        editable={editable}
-        setEditable={setEditable}
-        saveEdit={() => {
-          props.updateFilm(props.film.id, newRating, newFavorite);
-          setEditable(false);
-        }}
-        cancel={() => {
-          setNewFavorite(props.film.favorite);
-          setNewRating(props.film.rating);
-          setEditable(false);
         }}
       />
     </tr>
@@ -90,9 +64,11 @@ function FilmData(props) {
 
       <td>
         <CheckBox
-          editable={props.editable}
+          editable={true}
           value={props.film.favorite}
-          setValue={props.setNewFavorite}
+          setValue={(newValue) => {
+            props.updateFilm(props.film.id, props.film.rating, newValue);
+          }}
         />
       </td>
 
@@ -103,14 +79,12 @@ function FilmData(props) {
       </td>
 
       <td>
-        {props.editable === true ? (
           <EditableRatingStars
-            rating={props.newRating}
-            setRatingForm={props.setNewRating}
+            rating={props.film.rating}
+            setRatingForm={(newValue) => {
+              props.updateFilm(props.film.id, newValue, props.film.rating);
+            }}
           />
-        ) : (
-          <RatingStars rating={props.film.rating} />
-        )}
       </td>
     </>
   );
@@ -119,30 +93,19 @@ function FilmData(props) {
 function FilmAction(props) {
   return (
     <td>
-      {props.editable === false ? (
-        <>
-          <Button
-            variant="primary"
-            onClick={() => {
-              props.setEditable(true);
-            }}
-          >
-            <PencilSquare />
-          </Button>
-          <Button variant="danger" onClick={props.deleteFilm}>
-            <Trash />
-          </Button>
-        </>
-      ) : (
-        <>
-          <Button variant="success" onClick={props.saveEdit}>
-            <CheckSquare />
-          </Button>
-          <Button variant="warning" onClick={props.cancel}>
-            <XSquare />
-          </Button>
-        </>
-      )}
+      <>
+        <Button
+          variant="primary"
+          onClick={() => {
+            props.setEditable(true);
+          }}
+        >
+          <PencilSquare />
+        </Button>
+        <Button variant="danger" onClick={props.deleteFilm}>
+          <Trash />
+        </Button>
+      </>
     </td>
   );
 }
